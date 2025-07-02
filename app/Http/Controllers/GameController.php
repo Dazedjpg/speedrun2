@@ -52,26 +52,32 @@ class GameController extends Controller
         return view('games.edit', compact('game'));
     }
 
-    public function update(Request $request, $id) {
-        $game = Game::findOrFail($id);
+    public function update(Request $request, $id)
+{
+    $request->validate([
+        'game_title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        $data = $request->validate([
-            'game_title' => 'required',
-            'description' => 'required',
-            'cover_image' => 'nullable|image'
-        ]);
+    $game = Game::findOrFail($id);
 
-        if ($request->hasFile('cover_image')) {
-            $imageName = time() . '.' . $request->cover_image->extension();
-            $request->cover_image->move(public_path('img'), $imageName);
-            $data['cover_image'] = $imageName;
-        }
+    $game->game_title = $request->game_title;
+    $game->description = $request->description;
 
-        $game->update($data);
+    // Jika cover image diunggah, update filenya
+    if ($request->hasFile('cover_image')) {
+        $file = $request->file('cover_image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('img'), $filename);
 
-        return redirect()->route('games.index')->with('success', 'Game berhasil diperbarui!');
+        $game->cover_image = $filename;
     }
 
+    $game->save();
+
+    return redirect()->route('games.index')->with('success', 'Game berhasil diperbarui.');
+}
     public function destroy($id) {
         $game = Game::findOrFail($id);
         $game->delete();

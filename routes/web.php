@@ -50,6 +50,9 @@ Route::get('/update-runs-json', [RunController::class, 'updateRunsJson']);
 
 Route::get('/runs', [RunController::class, 'index'])->name('runs.index');
 Route::get('/runs/{id}', [RunController::class, 'show'])->name('runs.show');
+Route::get('/games/{id}/submit-run', [RunController::class, 'create'])->name('runs.create');
+Route::post('/games/{id}/submit-run', [RunController::class, 'store'])->name('runs.store');
+
 
 
 
