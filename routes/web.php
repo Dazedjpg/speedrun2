@@ -32,11 +32,14 @@ Route::get('/games.json', function () {
 
 Route::get('/update-games-json', [GameController::class, 'updateGamesJson']);
 
+Route::get('/games', [GameController::class, 'index'])->name('games.index');
+Route::get('/games/create', [GameController::class, 'create'])->name('games.create'); // <-- TARUH DI ATAS
 Route::get('/games/{id}/edit', [GameController::class, 'edit'])->name('games.edit'); // <-- TARUH DI ATAS
 Route::post('/games', [GameController::class, 'store'])->name('games.store');
+Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show'); // TARUH PALING BAWAH
 Route::put('/games/{id}', [GameController::class, 'update'])->name('games.update');
 Route::delete('/games/{id}', [GameController::class, 'destroy'])->name('games.destroy');
-Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show'); // TARUH PALING BAWAH
+
 
 
 
@@ -48,6 +51,19 @@ Route::get('/runs.json', function () {
     }
 
     return response(Storage::disk('public')->get($path), 200)
+        ->header('Content-Type', 'application/json');
+});
+
+Route::get('/users.json', function () {
+    $path = 'json/users.json';
+
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404, 'File users.json tidak ditemukan');
+    }
+
+    $contents = Storage::disk('public')->get($path);
+
+    return response($contents, 200)
         ->header('Content-Type', 'application/json');
 });
 
@@ -74,9 +90,21 @@ Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('signin.fo
 Route::post('/signin', [AuthController::class, 'login'])->name('signin');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
 Route::get('/api/search-suggestions', [App\Http\Controllers\SearchController::class, 'suggest']);
+
+use App\Http\Controllers\AdminAuthController;
+
+Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+Route::get('/admin/dashboard', function () {
+    return 'Welcome Admin!';
+})->middleware('auth:admin')->name('admin.dashboard');
