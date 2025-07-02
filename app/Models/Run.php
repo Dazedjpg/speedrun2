@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth; // optional
+use Illuminate\Http\Request;
+
+
 class Run extends Model
 {
     protected $table = 'runs';

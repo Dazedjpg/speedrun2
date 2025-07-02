@@ -6,8 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 class Game extends Model
 {
     protected $table = 'games';
+    protected $primaryKey = 'game_id';
 
-    protected $fillable = ['game_title', 'description', 'cover_image'];
+    public function runs()
+    {
+        return $this->hasMany(Run::class, 'game_id');
+    }
+
+    protected $fillable = [
+        'game_title',
+        'description',
+        'cover_image'
+    ];
 
     public $timestamps = false; // <-- tambahkan ini
 }

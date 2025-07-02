@@ -98,13 +98,3 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
 Route::get('/api/search-suggestions', [App\Http\Controllers\SearchController::class, 'suggest']);
-
-use App\Http\Controllers\AdminAuthController;
-
-Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
-Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
-
-Route::get('/admin/dashboard', function () {
-    return 'Welcome Admin!';
-})->middleware('auth:admin')->name('admin.dashboard');

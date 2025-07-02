@@ -10,7 +10,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $table = 'users';  
-  protected $primaryKey = 'user_id'; // Kolom primary key kamu
+    protected $primaryKey = 'user_id'; // Kolom primary key kamu
 
     public $timestamps = false; // Nonaktifkan timestamps jika tidak ada created_at & updated_at
 
