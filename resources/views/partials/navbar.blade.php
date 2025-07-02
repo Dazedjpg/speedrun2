@@ -1,7 +1,7 @@
 <nav class="{{ $style['nav'] ?? 'bg-maroon' }} text-white px-6 py-3 flex justify-between items-center fixed top-0 left-0 w-full z-50 shadow-md">
   <!-- Left: Logo + Links -->
   <div class="flex items-center gap-6">
-    <span class="text-xl font-bold">Speedrunner</span>
+    <a href="/" class="text-xl font-bold hover:underline">Speedrunner</a>
     <a href="/" class="hover:underline">Home</a>
     <a href="/games" class="hover:underline">Games</a>
   </div>
@@ -21,7 +21,7 @@
     </div>
 
     @guest
-      <a href="{{ route('signin.form') }}" class="bg-white text-maroon px-4 py-1 rounded hover:bg-gray-100 transition">Sign In</a>
+      <a href="{{ route('signin.form') }}" class="bg-white text-black px-4 py-1 rounded hover:bg-gray-100 transition">Sign In</a>
     @endguest
 
     @auth
@@ -45,16 +45,26 @@
   </div>
 </nav>
 
+<!-- Suggestion Script -->
 <script>
   const input = document.getElementById('search-input');
   const suggestions = document.getElementById('suggestions');
 
   const searchData = [
     @foreach($games as $g)
-      { type: 'Game', name: '{{ $g['game_title'] }}', url: '/games/{{ $g['game_id'] }}' },
+      {
+        type: 'Game',
+        name: '{{ $g['game_title'] }}',
+        url: '/games/{{ $g['game_id'] }}',
+        image: '{{ $g['cover_image'] }}'
+      },
     @endforeach
     @foreach($users as $u)
-      { type: 'User', name: '{{ $u['name'] }}', url: '/profile/{{ $u['user_id'] }}' },
+      {
+        type: 'User',
+        name: '{{ $u['name'] }}',
+        url: '/profile/{{ $u['user_id'] }}'
+      },
     @endforeach
   ];
 
@@ -79,7 +89,18 @@
     results.forEach(result => {
       const li = document.createElement('li');
       li.className = 'px-3 py-2 hover:bg-gray-200 cursor-pointer';
-      li.innerHTML = `<span class="font-semibold">${result.type}:</span> ${result.name}`;
+
+      if (result.type === 'Game') {
+        li.innerHTML = `
+          <div class="flex items-center gap-2">
+            <img src="/img/${result.image}" alt="${result.name}" class="w-8 h-8 object-cover rounded" />
+            <span><span class="font-semibold">${result.type}:</span> ${result.name}</span>
+          </div>
+        `;
+      } else {
+        li.innerHTML = `<span class="font-semibold">${result.type}:</span> ${result.name}`;
+      }
+
       li.onclick = () => window.location.href = result.url;
       suggestions.appendChild(li);
     });
