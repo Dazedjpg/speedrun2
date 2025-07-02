@@ -52,25 +52,32 @@ class RunController extends Controller
 
     public function store(Request $request, $id)
     {
-       $request->validate([
-    'runner' => 'required|string|max:100',
-    'time' => 'required|string',
-    'status' => 'required|string',
-    'category_id' => 'required|integer',
-    'video' => 'nullable|url',
-]);
+        $request->validate([
+            'runner' => 'required|string|max:100',
+            'time' => 'required|string',
+            'status' => 'required|string',
+            'category_id' => 'required|integer',
+            'video' => 'nullable|url',
+        ]);
 
-DB::table('runs')->insert([
-    'game_id' => $id,
-    'runner' => $request->runner,
-    'time' => $request->time,
-    'status' => $request->status,
-    'category_id' => $request->category_id, // ditambahkan
-    'video' => $request->video,
-    'submitted_at' => now()
-]);
+        // Tambahkan user_id dari auth
+        DB::table('runs')->insert([
+            'game_id' => $id,
+            'runner' => $request->runner,
+            'time' => $request->time,
+            'status' => $request->status,
+            'category_id' => $request->category_id,
+            'video' => $request->video,
+            'submitted_at' => now(),
+            'user_id' => auth()->id(),
+            'rank' => null
+        ]);
 
+
+        // Panggil fungsi untuk update JSON
+        $this->updateRunsJson(); // langsung panggil private method
 
         return redirect()->route('games.show', ['id' => $id])->with('success', 'Run submitted!');
     }
+
 }

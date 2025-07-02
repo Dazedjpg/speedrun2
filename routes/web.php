@@ -80,3 +80,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
 Route::get('/api/search-suggestions', [App\Http\Controllers\SearchController::class, 'suggest']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/runs/create/{id}', [RunController::class, 'create'])->name('runs.create');
+    Route::post('/runs/store/{id}', [RunController::class, 'store'])->name('runs.store');
+});
+
