@@ -1,11 +1,21 @@
 <?php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
-use App\Http\Controllers\AuthController;
+Route::post('/games', function (Request $request) {
+    $data = $request->only(['game_id', 'game_title', 'description', 'cover_image']);
 
-Route::post('/signup', [AuthController::class, 'signup']); // Return JWT
-Route::post('/login', [AuthController::class, 'login']);   // Return JWT
+    $path = 'json/games.json';
+    $games = [];
 
-Route::middleware(['auth:api'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']); // Info user login
+    if (Storage::disk('public')->exists($path)) {
+        $games = json_decode(Storage::disk('public')->get($path), true);
+    }
+
+    $games[] = $data;
+
+    Storage::disk('public')->put($path, json_encode($games, JSON_PRETTY_PRINT));
+
+    return response()->json(['message' => 'Game added successfully'], 201);
 });

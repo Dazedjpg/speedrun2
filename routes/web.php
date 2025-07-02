@@ -6,7 +6,8 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\RunController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserJsonController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/users/update-json', [UserJsonController::class, 'updateJson'])->name('users.updateJson');
 Route::get('/users/json', [UserJsonController::class, 'viewJson'])->name('users.viewJson');
@@ -40,8 +41,11 @@ Route::post('/games', [GameController::class, 'store'])->name('games.store');
 Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show'); // TARUH PALING BAWAH
 Route::put('/games/{id}', [GameController::class, 'update'])->name('games.update');
 Route::delete('/games/{id}', [GameController::class, 'destroy'])->name('games.destroy');
+Route::get('/categories', [CategoryController::class, 'exportToJson']);
 
 
+Route::get('/export-admins', [AdminController::class, 'exportToJson'])->name('export.admins');
+Route::get('/admin.json', [AdminController::class, 'showJson'])->name('admin.json');
 
 
 Route::get('/runs.json', function () {
@@ -67,6 +71,18 @@ Route::get('/users.json', function () {
     return response($contents, 200)
         ->header('Content-Type', 'application/json');
 });
+
+Route::get('/category.json', function () {
+    $path = 'json/category.json';
+
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404, 'category.json not found.');
+    }
+
+    return response()->file(storage_path("app/public/{$path}"), [
+        'Content-Type' => 'application/json'
+    ]);
+})->name('category.json');
 
 Route::get('/update-runs-json', [RunController::class, 'updateRunsJson']);
 
