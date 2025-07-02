@@ -21,7 +21,8 @@
     </div>
 
     @guest
-      <a href="{{ route('signin.form') }}" class="bg-white text-black px-4 py-1 rounded hover:bg-gray-100 transition">Sign In</a>
+     <a href="{{ route('login') }}" class="bg-white text-black px-4 py-1 rounded hover:bg-gray-100 transition">Sign In</a>
+
     @endguest
 
     @auth
@@ -44,7 +45,16 @@
     @endauth
   </div>
 </nav>
-
+@if(session('success'))
+  <div id="flash-message" class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-md z-50">
+    {{ session('success') }}
+  </div>
+  <script>
+    setTimeout(() => {
+      document.getElementById('flash-message')?.remove();
+    }, 3000);
+  </script>
+@endif
 <!-- Suggestion Script -->
 <script>
   const input = document.getElementById('search-input');

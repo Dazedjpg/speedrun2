@@ -2,43 +2,96 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    // Menampilkan halaman Sign Up (Blade)
+    public function showSignupForm()
+    {
+        return view('auth.signup');
+    }
+
+    // Menampilkan halaman Sign In (Blade)
+    public function showSigninForm()
+    {
+        return view('auth.signin');
+    }
+
+    // [Diperlukan Laravel untuk redirect user yang belum login]
     public function showLoginForm()
     {
         return view('auth.signin');
     }
 
-    public function login(Request $request)
+    // Proses Sign Up (return JSON + token)
+    public function signup(Request $request)
     {
-        $username = $request->input('username');
-        $password = $request->input('password');
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+        ]);
 
-        // Coba login sebagai Admin
-        $admin = DB::table('admin')->where('admin_name', $username)->first();
-        if ($admin && Hash::check($password, $admin->password)) {
-            session(['is_admin' => true, 'admin_id' => $admin->admin_id, 'admin_name' => $admin->admin_name]);
-            return redirect('/dashboard'); // Ganti dengan halaman khusus admin jika perlu
-        }
+        $user = User::create([
+            'name'     => $request->input('name'),
+            'email'    => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+        ]);
 
-        // Coba login sebagai User
-        $user = DB::table('users')->where('name', $username)->first();
-        if ($user && Hash::check($password, $user->password)) {
-            session(['is_admin' => false, 'user_id' => $user->id, 'user_name' => $user->name]);
-            return redirect('/'); // Halaman utama user
-        }
+        $token = JWTAuth::fromUser($user);
 
-        return back()->with('error', 'Invalid credentials');
+        return response()->json([
+            'message' => 'User registered successfully',
+            'token'   => $token,
+            'user'    => $user
+        ], 201);
     }
 
-    public function logout(Request $request)
+    // Proses Login (return JWT token)
+    public function login(Request $request)
     {
-        Session::flush();
-        return redirect()->route('signin.form');
+        $credentials = $request->only('email', 'password');
+
+        if (!$token = JWTAuth::attempt($credentials)) {
+            if ($request->wantsJson()) {
+                return response()->json(['error' => 'Email atau password salah'], 401);
+            } else {
+                return back()->withErrors(['email' => 'Email atau password salah']);
+            }
+        }
+
+        // Simpan user ke session Laravel agar @auth bisa bekerja
+        $user = auth()->user();
+        auth()->login($user);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'access_token' => $token,
+                'token_type'   => 'bearer',
+                'expires_in'   => auth('api')->factory()->getTTL() * 60,
+            ]);
+        } else {
+            return redirect('/')->with('success', 'Berhasil login!');
+        }
+    }
+
+    // Logout (invalidate JWT)
+ public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Berhasil logout');
+    }
+
+    public function me()
+    {
+        return response()->json(auth()->user());
     }
 }

@@ -91,27 +91,18 @@ Route::get('/runs/{id}', [RunController::class, 'show'])->name('runs.show');
 Route::get('/games/{id}/submit-run', [RunController::class, 'create'])->name('runs.create');
 Route::post('/games/{id}/submit-run', [RunController::class, 'store'])->name('runs.store');
 
-
 Route::get('/users-json-update', [UserJsonController::class, 'update'])->name('users.json.update');
 Route::get('/users-json', [UserJsonController::class, 'fetch'])->name('users.json.fetch');
 Route::get('/users/{id}', [UserJsonController::class, 'show']);
 
-use App\Http\Controllers\AuthController;
-Route::middleware(['web'])->group(function () {
-
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.form');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 
-Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('signin.form');
-
+// Ini untuk Blade UI + @guest/@auth agar route('login') dikenali
+Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/signin', [AuthController::class, 'login'])->name('signin');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
-});
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
-Route::get('/api/search-suggestions', [App\Http\Controllers\SearchController::class, 'suggest']);
+// Jika pakai endpoint auth API:
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');

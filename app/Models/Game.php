@@ -13,11 +13,7 @@ class Game extends Model
         return $this->hasMany(Run::class, 'game_id');
     }
 
-    protected $fillable = [
-        'game_title',
-        'description',
-        'cover_image'
-    ];
+   
 
     public $timestamps = false; // <-- tambahkan ini
 }
