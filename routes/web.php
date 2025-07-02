@@ -33,11 +33,14 @@ Route::get('/games.json', function () {
 
 Route::get('/update-games-json', [GameController::class, 'updateGamesJson']);
 
+Route::get('/games', [GameController::class, 'index'])->name('games.index');
+Route::get('/games/create', [GameController::class, 'create'])->name('games.create'); // <-- TARUH DI ATAS
 Route::get('/games/{id}/edit', [GameController::class, 'edit'])->name('games.edit'); // <-- TARUH DI ATAS
 Route::post('/games', [GameController::class, 'store'])->name('games.store');
+Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show'); // TARUH PALING BAWAH
 Route::put('/games/{id}', [GameController::class, 'update'])->name('games.update');
 Route::delete('/games/{id}', [GameController::class, 'destroy'])->name('games.destroy');
-Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show'); // TARUH PALING BAWAH
+
 
 
 
@@ -52,6 +55,19 @@ Route::get('/runs.json', function () {
         ->header('Content-Type', 'application/json');
 });
 
+Route::get('/users.json', function () {
+    $path = 'json/users.json';
+
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404, 'File users.json tidak ditemukan');
+    }
+
+    $contents = Storage::disk('public')->get($path);
+
+    return response($contents, 200)
+        ->header('Content-Type', 'application/json');
+});
+
 Route::get('/update-runs-json', [RunController::class, 'updateRunsJson']);
 
 Route::get('/runs', [RunController::class, 'index'])->name('runs.index');
@@ -62,14 +78,15 @@ Route::post('/games/{id}/submit-run', [RunController::class, 'store'])->name('ru
 Route::get('/users-json-update', [UserJsonController::class, 'update'])->name('users.json.update');
 Route::get('/users-json', [UserJsonController::class, 'fetch'])->name('users.json.fetch');
 Route::get('/users/{id}', [UserJsonController::class, 'show']);
-// Blade UI
-Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.form');
-Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin.form');
 
-// JWT Auth API
+Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.form');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+
+// Ini untuk Blade UI + @guest/@auth agar route('login') dikenali
+Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/signin', [AuthController::class, 'login'])->name('signin');
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Optional: untuk tes ambil data user dari token
+// Jika pakai endpoint auth API:
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');

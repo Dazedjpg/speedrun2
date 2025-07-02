@@ -4,92 +4,83 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    // Tampilkan halaman Sign Up
+    // Menampilkan halaman Sign Up (Blade)
     public function showSignupForm()
     {
         return view('auth.signup');
     }
 
-    // Tampilkan halaman Sign In
+    // Menampilkan halaman Sign In (Blade)
     public function showSigninForm()
     {
         return view('auth.signin');
     }
 
-    // Proses Sign Up
+    // [Diperlukan Laravel untuk redirect user yang belum login]
+    public function showLoginForm()
+    {
+        return view('auth.signin');
+    }
+
+    // Proses Sign Up (return JSON + token)
     public function signup(Request $request)
     {
         $request->validate([
-      'name' => 'required',
-        'email' => 'required|email|unique:users,email',
-      'password' => 'required|min:6',
-]);
-
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+        ]);
 
         $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
+            'name'     => $request->input('name'),
+            'email'    => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
 
-        Auth::login($user); // Login otomatis setelah signup
+        $token = JWTAuth::fromUser($user);
 
-        return redirect('/');
+        return response()->json([
+            'message' => 'User registered successfully',
+            'token'   => $token,
+            'user'    => $user
+        ], 201);
     }
 
-
-
-public function signin(Request $request)
-{
-    // Validasi input
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required'
-    ]);
-
-    // Cari user berdasarkan email
-    $user = \App\Models\User::where('email', $request->email)->first();
-
-    // Jika email tidak ditemukan
-    if (!$user) {
-        return back()->with('error', 'Email tidak terdaftar.');
-    }
-
-    // Jika password salah
-    if (!\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
-        return back()->with('error', 'Password salah.');
-    }
-
-    // Login dan buat ulang session ID
-    \Illuminate\Support\Facades\Auth::login($user);
-    $request->session()->regenerate();
-
-    // Redirect ke home
-    return redirect('/');
-}
-
-public function showLoginForm()
-    {
-        return view('auth.signin'); // Pastikan file ini ada di resources/views/auth/signin.blade.php
-    }
-
+    // Proses Login (return JWT token)
     public function login(Request $request)
     {
-        // Proses login nanti di sini
+        $credentials = $request->only('email', 'password');
+
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return response()->json(['error' => 'Email atau password salah'], 401);
+        }
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type'   => 'bearer',
+            'expires_in'   => auth('api')->factory()->getTTL() * 60
+        ]);
     }
 
-    // Logout
-    public function logout(Request $request)
+    // Logout (invalidate JWT)
+    public function logout()
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return response()->json(['message' => 'Berhasil logout']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Token tidak valid atau sudah logout'], 400);
+        }
+    }
 
-        return redirect('/');
+    // Ambil data user dari JWT
+    public function me()
+    {
+        return response()->json(auth()->user());
     }
 }
