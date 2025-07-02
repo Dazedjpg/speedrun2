@@ -25,30 +25,6 @@
       placeholder="Search..."
       class="px-3 py-1 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-maroon"
     />
-
-    @guest
-      <a href="{{ route('signup.form') }}" class="text-white hover:underline">Sign Up</a>
-      <a href="{{ route('signin.form') }}" class="bg-maroon text-white px-4 py-1 rounded hover:bg-red-900">Sign In</a>
-    @endguest
-
-    @auth
-      <!-- Profile dropdown -->
-      <div class="relative group">
-        <button class="flex items-center text-white focus:outline-none">
-          <span class="mr-2">{{ Auth::user()->name }}</span>
-          <svg class="w-4 h-4 transform group-hover:rotate-180 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <div class="absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-md opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 z-50">
-          <a href="/profile" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
-          <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-200">Logout</button>
-          </form>
-        </div>
-      </div>
-    @endauth
   </div>
 </nav>
 
@@ -75,23 +51,23 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
     @foreach($games as $game)
       <div class="bg-gray-900 p-4 rounded shadow hover:shadow-lg">
-        <a href="{{ route('games.show', ['id' => $game->game_id]) }}">
+        <a href="{{ route('games.show', ['id' => $game['game_id']]) }}">
           <img 
-            src="{{ asset('img/' . $game->cover_image) }}" 
-            alt="{{ $game->game_title }}" 
+            src="{{ asset('img/' . $game['cover_image']) }}" 
+            alt="{{ $game['game_title'] }}" 
             class="w-full h-48 object-cover rounded mb-3"
           />
-          <h2 class="text-xl font-semibold text-white">{{ $game->game_title }}</h2>
+          <h2 class="text-xl font-semibold text-white">{{ $game['game_title'] }}</h2>
         </a>
 
         <!-- Tombol Edit & Delete -->
         <div class="flex justify-between mt-4">
-          <a href="{{ route('games.edit', $game->game_id) }}"
+          <a href="{{ route('games.edit', $game['game_id']) }}"
              class="text-sm bg-yellow-500 text-black px-3 py-1 rounded hover:bg-yellow-600">
             Edit
           </a>
 
-          <form action="{{ route('games.destroy', $game->game_id) }}" method="POST"
+          <form action="{{ route('games.destroy', $game['game_id']) }}" method="POST"
                 onsubmit="return confirm('Hapus game ini?')">
             @csrf
             @method('DELETE')
