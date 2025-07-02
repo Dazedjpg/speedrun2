@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Run;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RunController extends Controller
 {
@@ -40,5 +42,35 @@ class RunController extends Controller
         Storage::disk('public')->put('json/runs.json', $jsonData);
 
         return response()->json(['message' => 'runs.json berhasil diperbarui']);
+    }
+
+    public function create($id)
+    {
+        $game = DB::table('games')->where('game_id', $id)->first();
+        return view('runs.create', compact('game'));
+    }
+
+    public function store(Request $request, $id)
+    {
+       $request->validate([
+    'runner' => 'required|string|max:100',
+    'time' => 'required|string',
+    'status' => 'required|string',
+    'category_id' => 'required|integer',
+    'video' => 'nullable|url',
+]);
+
+DB::table('runs')->insert([
+    'game_id' => $id,
+    'runner' => $request->runner,
+    'time' => $request->time,
+    'status' => $request->status,
+    'category_id' => $request->category_id, // ditambahkan
+    'video' => $request->video,
+    'submitted_at' => now()
+]);
+
+
+        return redirect()->route('games.show', ['id' => $id])->with('success', 'Run submitted!');
     }
 }

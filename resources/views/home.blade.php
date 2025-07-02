@@ -103,7 +103,7 @@
   </div>
 </a>
 
-        <a href="{{ url('/games/1001') }}" class="block hover:bg-gray-800 transition rounded-lg px-1 py-2">
+        <a href="{{ url('/games/') }}" class="block hover:bg-gray-800 transition rounded-lg px-1 py-2">
   <div class="flex gap-4 items-start border-b border-gray-700 pb-4">
     <img src="{{ asset('img/pacman.jpg') }}" alt="Game" class="w-16 h-16 rounded" />
     <div class="flex-1">
