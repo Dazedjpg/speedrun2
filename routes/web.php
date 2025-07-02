@@ -69,7 +69,7 @@ Route::middleware(['web'])->group(function () {
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.form');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 
-Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin.form')->name('login');
+Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin');
 
 
 Route::post('/signin', [AuthController::class, 'signin'])->name('login'); // <- tambahkan alias login
@@ -81,9 +81,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
-<<<<<<< Updated upstream
-Route::get('/api/search-suggestions', [App\Http\Controllers\SearchController::class, 'suggest']);
-=======
 Route::get('/api/search-suggestions', [App\Http\Controllers\SearchController::class, 'suggest']);
 
 use App\Http\Controllers\ProfileController;
@@ -91,4 +88,3 @@ use App\Http\Controllers\ProfileController;
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 });
->>>>>>> Stashed changes
