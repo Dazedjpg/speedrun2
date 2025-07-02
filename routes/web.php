@@ -66,3 +66,5 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
