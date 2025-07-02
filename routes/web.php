@@ -6,6 +6,9 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\RunController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserJsonController;
+use App\Http\Controllers\CategoryController;
+
+Route::resource('categories', CategoryController::class);
 
 Route::get('/users/update-json', [UserJsonController::class, 'updateJson'])->name('users.updateJson');
 Route::get('/users/json', [UserJsonController::class, 'viewJson'])->name('users.viewJson');
@@ -106,3 +109,5 @@ use App\Http\Controllers\ProfileController;
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 });
+
+
