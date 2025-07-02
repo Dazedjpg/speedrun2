@@ -41,6 +41,15 @@ return [
         'provider' => 'admins',
         ],
     ],
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'user',
+    ],
+       'api' => [
+        'driver' => 'jwt',
+        'provider' => 'users',
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------

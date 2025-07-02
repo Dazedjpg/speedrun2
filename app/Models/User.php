@@ -4,13 +4,16 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
+    protected $primaryKey = 'user_id'; // <-- Penting!
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $table = 'users';  
-    protected $primaryKey = 'user_id'; // Kolom primary key kamu
 
     public $timestamps = false; // Nonaktifkan timestamps jika tidak ada created_at & updated_at
 
@@ -21,10 +24,14 @@ class User extends Authenticatable
         'password',
     ];
 
-    // Otentikasi berdasarkan email
-    public function getAuthIdentifierName()
+    public function getJWTIdentifier()
     {
-        return 'email';
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
     
