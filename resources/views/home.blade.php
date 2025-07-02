@@ -10,6 +10,7 @@
     .text-maroon { color: #800000; }
   </style>
 </head>
+
 <body class="bg-black text-white font-sans min-h-screen">
 
 <!-- Navbar -->
@@ -28,8 +29,8 @@
     />
 
     @guest
-      <a href="{{ route('signup.form') }}" class="text-white hover:underline">Sign Up</a>
-      <a href="{{ route('signin.form') }}" class="bg-maroon text-white px-4 py-1 rounded hover:bg-red-900">Sign In</a>
+      <a href="{{ route('signup.form') }}" class="bg-maroon text-white px-4 py-1 rounded hover:bg-red-900">Sign Up</a>
+      <a href="{{ route('signin') }}" class="bg-maroon text-white px-4 py-1 rounded hover:bg-red-900">Sign In</a>
     @endguest
 
     @auth

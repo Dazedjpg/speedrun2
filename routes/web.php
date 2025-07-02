@@ -6,9 +6,10 @@ use App\Http\Controllers\GameController;
 
 
 
-Route::get('/', function () {
-    return view('home');
-});
+use App\Http\Controllers\HomeController;
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
 
 Route::get('/games', [GameController::class, 'index'])->name('games.index');
 Route::get('/games/create', [GameController::class, 'create'])->name('games.create'); // <-- TARUH DI ATAS
@@ -38,7 +39,13 @@ Route::get('/update-games-json', [GameController::class, 'updateGamesJson']);
 
 
 use App\Http\Controllers\AuthController;
+Route::middleware(['web'])->group(function () {
 
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.form');
-Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin.form');
+Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+
+Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin');
+Route::post('/signin', [AuthController::class, 'signin']);
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});

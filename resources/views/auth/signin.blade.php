@@ -14,9 +14,14 @@
   <div class="bg-gray-900 p-8 rounded-lg shadow-md w-full max-w-md">
     <h2 class="text-2xl font-bold mb-6 text-center">Sign In</h2>
 
-    <form action="#" method="POST">
-      @csrf
+    <form action="{{ route('signin') }}" method="POST">
 
+      @csrf
+  @if (session('error'))
+  <div class="bg-red-500 text-white p-3 mb-4 rounded">
+    {{ session('error') }}
+  </div>
+  @endif
       <div class="mb-4">
         <label for="email" class="block mb-1">Email</label>
         <input type="email" id="email" name="email" class="w-full px-3 py-2 rounded text-black" required>

@@ -14,7 +14,7 @@
   <div class="bg-gray-900 p-8 rounded-lg shadow-md w-full max-w-md">
     <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
 
-    <form action="#" method="POST">
+    <form action="{{ route('signup') }}" method="POST">
       @csrf
 
       <div class="mb-4">
@@ -39,7 +39,8 @@
 
     <p class="mt-4 text-center text-sm text-gray-400">
       Already have an account? 
-      <a href="{{ route('signin.form') }}" class="text-maroon hover:underline">Sign In</a>
+      <a href="{{ route('signin') }}" class="text-maroon hover:underline">Sign In</a>
+
     </p>
   </div>
 
