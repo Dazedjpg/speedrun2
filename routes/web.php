@@ -6,9 +6,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\RunController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserJsonController;
-use App\Http\Controllers\CategoryController;
-
-Route::resource('categories', CategoryController::class);
+use App\Http\Controllers\AuthController;
 
 Route::get('/users/update-json', [UserJsonController::class, 'updateJson'])->name('users.updateJson');
 Route::get('/users/json', [UserJsonController::class, 'viewJson'])->name('users.viewJson');
@@ -77,16 +75,16 @@ Route::get('/runs/{id}', [RunController::class, 'show'])->name('runs.show');
 Route::get('/games/{id}/submit-run', [RunController::class, 'create'])->name('runs.create');
 Route::post('/games/{id}/submit-run', [RunController::class, 'store'])->name('runs.store');
 
-
 Route::get('/users-json-update', [UserJsonController::class, 'update'])->name('users.json.update');
 Route::get('/users-json', [UserJsonController::class, 'fetch'])->name('users.json.fetch');
 Route::get('/users/{id}', [UserJsonController::class, 'show']);
-
-use App\Http\Controllers\AuthController;
-Route::middleware(['web'])->group(function () {
-
+// Blade UI
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.form');
+Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin.form');
+
+// JWT Auth API
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+
 
 Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin');
 
@@ -98,9 +96,6 @@ Route::post('/signin', [AuthController::class, 'signin'])->name('login'); // <- 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-});
-
-
 Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
 Route::get('/api/search-suggestions', [App\Http\Controllers\SearchController::class, 'suggest']);
 
@@ -110,4 +105,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 });
 
+Route::post('/signin', [AuthController::class, 'login'])->name('signin');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Optional: untuk tes ambil data user dari token
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
