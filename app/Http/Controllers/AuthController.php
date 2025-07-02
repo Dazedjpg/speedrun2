@@ -73,7 +73,15 @@ public function signin(Request $request)
     return redirect('/');
 }
 
+public function showLoginForm()
+    {
+        return view('auth.signin'); // Pastikan file ini ada di resources/views/auth/signin.blade.php
+    }
 
+    public function login(Request $request)
+    {
+        // Proses login nanti di sini
+    }
 
     // Logout
     public function logout(Request $request)
