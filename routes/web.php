@@ -61,6 +61,7 @@ Route::post('/games/{id}/submit-run', [RunController::class, 'store'])->name('ru
 
 Route::get('/users-json-update', [UserJsonController::class, 'update'])->name('users.json.update');
 Route::get('/users-json', [UserJsonController::class, 'fetch'])->name('users.json.fetch');
+Route::get('/users/{id}', [UserJsonController::class, 'show']);
 
 use App\Http\Controllers\AuthController;
 
@@ -73,3 +74,4 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
+Route::get('/api/search-suggestions', [App\Http\Controllers\SearchController::class, 'suggest']);
