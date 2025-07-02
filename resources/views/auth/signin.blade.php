@@ -42,6 +42,10 @@
       Don't have an account? 
       <a href="{{ route('signup.form') }}" class="text-maroon hover:underline">Sign Up</a>
     </p>
+    <p class="mt-4 text-center text-sm text-gray-400">
+      Forgot Your Password? 
+      <a href="{{ route('') }}" class="text-maroon hover:underline">Forgot Password</a>
+    </p>
   </div>
 
 </body>
