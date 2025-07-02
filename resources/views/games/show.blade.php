@@ -74,18 +74,23 @@
       <div class="flex flex-wrap gap-2" id="category-tabs">
         @foreach($categories as $index => $cat)
           <button 
-            onclick="showCategory('{{ Str::slug($cat) }}')" 
-            class="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600 {{ $loop->first ? 'active-tab' : '' }}"
-            id="tab-{{ Str::slug($cat) }}"
-          >
-            {{ $cat }}
-          </button>
+  onclick="showCategory('{{ Str::slug($cat) }}')" 
+  class="px-4 py-2 rounded-full font-semibold border-2 border-gray-500 bg-gray-800 text-white hover:bg-red-700 hover:border-red-700 transition duration-200 {{ $loop->first ? 'active-tab' : '' }}"
+
+  id="tab-{{ Str::slug($cat) }}"
+>
+  {{ $cat }}
+</button>
         @endforeach
       </div>
 
       <div class="mt-4 md:mt-0">
-        <a href="{{ route('runs.create', ['id' => $game['game_id']]) }}" class="bg-maroon hover:bg-red-800 text-white px-5 py-2 rounded text-sm md:text-base">
-  ➕ Submit Run
+        <a href="{{ route('runs.create', ['id' => $game['game_id']]) }}"
+   class="inline-flex items-center gap-2 bg-gradient-to-r from-red-700 via-red-600 to-red-700 hover:from-red-800 hover:to-red-900 text-white font-semibold px-5 py-2 rounded-full shadow-md hover:shadow-lg transition duration-300 text-sm md:text-base">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+  </svg>
+  Submit Run
 </a>
       </div>
     </div>
