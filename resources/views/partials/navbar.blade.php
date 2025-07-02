@@ -45,8 +45,6 @@
   </div>
 </nav>
 
-
-
 <script>
   const input = document.getElementById('search-input');
   const suggestions = document.getElementById('suggestions');
