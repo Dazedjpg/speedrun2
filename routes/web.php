@@ -8,6 +8,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserJsonController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/users/update-json', [UserJsonController::class, 'updateJson'])->name('users.updateJson');
 Route::get('/users/json', [UserJsonController::class, 'viewJson'])->name('users.viewJson');
