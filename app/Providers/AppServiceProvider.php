@@ -21,16 +21,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Load games.json
-        $gamesJson = Storage::disk('public')->get('json/games.json');
-        $games = json_decode($gamesJson, true);
+        // Default fallback kalau file tidak ada
+        $games = [];
+        $users = [];
 
-        // Load users.json
-        $usersJson = Storage::disk('public')->get('json/users.json');
-        $users = json_decode($usersJson, true);
+        if (Storage::disk('public')->exists('json/games.json')) {
+            $gamesJson = Storage::disk('public')->get('json/games.json');
+            $games = json_decode($gamesJson, true) ?? [];
+        }
 
-        // Share to all views (like navbar)
+        if (Storage::disk('public')->exists('json/users.json')) {
+            $usersJson = Storage::disk('public')->get('json/users.json');
+            $users = json_decode($usersJson, true) ?? [];
+        }
+
         View::share('games', $games);
         View::share('users', $users);
     }
+
 }
