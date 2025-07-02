@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -57,28 +58,38 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Email atau password salah'], 401);
+            if ($request->wantsJson()) {
+                return response()->json(['error' => 'Email atau password salah'], 401);
+            } else {
+                return back()->withErrors(['email' => 'Email atau password salah']);
+            }
         }
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => auth('api')->factory()->getTTL() * 60
-        ]);
+        // Simpan user ke session Laravel agar @auth bisa bekerja
+        $user = auth()->user();
+        auth()->login($user);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'access_token' => $token,
+                'token_type'   => 'bearer',
+                'expires_in'   => auth('api')->factory()->getTTL() * 60,
+            ]);
+        } else {
+            return redirect('/')->with('success', 'Berhasil login!');
+        }
     }
 
     // Logout (invalidate JWT)
-    public function logout()
+ public function logout(Request $request)
     {
-        try {
-            JWTAuth::invalidate(JWTAuth::getToken());
-            return response()->json(['message' => 'Berhasil logout']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Token tidak valid atau sudah logout'], 400);
-        }
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Berhasil logout');
     }
 
-    // Ambil data user dari JWT
     public function me()
     {
         return response()->json(auth()->user());
