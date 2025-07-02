@@ -70,8 +70,9 @@ Route::middleware(['web'])->group(function () {
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.form');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 
-Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin');
-Route::post('/signin', [AuthController::class, 'signin']);
+Route::get('/signin', [AuthController::class, 'showLoginForm'])->name('signin.form');
+
+Route::post('/signin', [AuthController::class, 'login'])->name('signin');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
