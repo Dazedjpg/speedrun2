@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\RunController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/', function () {
     return view('home');

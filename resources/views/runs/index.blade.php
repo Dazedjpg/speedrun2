@@ -4,8 +4,10 @@
   <title>All Runs</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-black text-white">
+<body class="bg-black text-white font-sans min-h-screen pt-20">
 
+
+  @include('partials.navbar', ['style' => $style ?? ['nav' => 'bg-maroon']])
   <div class="container mx-auto px-4 py-6">
     <h1 class="text-3xl font-bold mb-6">All Runs</h1>
 
