@@ -8,6 +8,13 @@ class Game extends Model
 {
     protected $table = 'games';
     protected $primaryKey = 'game_id';
+    public $timestamps = false;
+    protected $fillable = [
+        'game_title',
+        'cover_image',
+        'release_date',
+        // tambahkan kolom lain yang ingin diisi secara massal
+    ];
 
     public function runs()
     {
