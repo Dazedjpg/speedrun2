@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\RunController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserJsonController;
+
+Route::get('/users/update-json', [UserJsonController::class, 'updateJson'])->name('users.updateJson');
+Route::get('/users/json', [UserJsonController::class, 'viewJson'])->name('users.viewJson');
 
 Route::get('/', function () {
     return view('home');
@@ -55,7 +59,8 @@ Route::get('/games/{id}/submit-run', [RunController::class, 'create'])->name('ru
 Route::post('/games/{id}/submit-run', [RunController::class, 'store'])->name('runs.store');
 
 
-
+Route::get('/users-json-update', [UserJsonController::class, 'update'])->name('users.json.update');
+Route::get('/users-json', [UserJsonController::class, 'fetch'])->name('users.json.fetch');
 
 use App\Http\Controllers\AuthController;
 
