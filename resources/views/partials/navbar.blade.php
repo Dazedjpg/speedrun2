@@ -21,7 +21,8 @@
     </div>
 
     @guest
-      <a href="{{ route('signin.form') }}" class="bg-white text-black px-4 py-1 rounded hover:bg-gray-100 transition">Sign In</a>
+     <a href="{{ route('login') }}" class="bg-white text-black px-4 py-1 rounded hover:bg-gray-100 transition">Sign In</a>
+
     @endguest
 
     @auth

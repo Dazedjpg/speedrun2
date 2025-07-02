@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 class AuthController extends Controller
 {
     // Tampilkan halaman Sign Up
@@ -14,13 +15,6 @@ class AuthController extends Controller
     {
         return view('auth.signup');
     }
-
-    // Tampilkan halaman Sign In
-    public function showSigninForm()
-    {
-        return view('auth.signin');
-    }
-
     // Proses Sign Up
     public function signup(Request $request)
     {
@@ -42,35 +36,29 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-
+public function showSigninForm()
+{
+    return view('auth.signin');
+}
 
 public function signin(Request $request)
 {
-    // Validasi input
     $request->validate([
         'email' => 'required|email',
         'password' => 'required'
     ]);
 
-    // Cari user berdasarkan email
     $user = \App\Models\User::where('email', $request->email)->first();
 
-    // Jika email tidak ditemukan
-    if (!$user) {
-        return back()->with('error', 'Email tidak terdaftar.');
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return back()->with('error', 'Email atau password salah.');
     }
 
-    // Jika password salah
-    if (!\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
-        return back()->with('error', 'Password salah.');
-    }
-
-    // Login dan buat ulang session ID
-    \Illuminate\Support\Facades\Auth::login($user);
+    Auth::login($user);
     $request->session()->regenerate();
 
-    // Redirect ke home
-    return redirect('/');
+    return redirect()->intended('/profile');
+
 }
 
 public function showLoginForm()
@@ -82,6 +70,8 @@ public function showLoginForm()
     {
         // Proses login nanti di sini
     }
+
+
 
     // Logout
     public function logout(Request $request)

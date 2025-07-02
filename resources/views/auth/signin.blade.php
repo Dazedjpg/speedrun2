@@ -14,7 +14,8 @@
   <div class="bg-gray-900 p-8 rounded-lg shadow-md w-full max-w-md">
     <h2 class="text-2xl font-bold mb-6 text-center">Sign In</h2>
 
-    <form action="{{ route('signin') }}" method="POST">
+<form action="/signin" method="POST">
+
 
       @csrf
   @if (session('error'))
