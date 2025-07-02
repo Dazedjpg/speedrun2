@@ -3,8 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\GameController;
-
-
+use App\Http\Controllers\RunController;
 
 Route::get('/', function () {
     return view('home');
@@ -34,6 +33,23 @@ Route::get('/games.json', function () {
 
 Route::get('/update-games-json', [GameController::class, 'updateGamesJson']);
 
+
+
+Route::get('/runs.json', function () {
+    $path = 'json/runs.json';
+
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404, 'File runs.json tidak ditemukan');
+    }
+
+    return response(Storage::disk('public')->get($path), 200)
+        ->header('Content-Type', 'application/json');
+});
+
+Route::get('/update-runs-json', [RunController::class, 'updateRunsJson']);
+
+Route::get('/runs', [RunController::class, 'index'])->name('runs.index');
+Route::get('/runs/{id}', [RunController::class, 'show'])->name('runs.show');
 
 
 
