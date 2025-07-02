@@ -4,7 +4,9 @@
   <title>Run Detail</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-black text-white">
+<body class="bg-black text-white font-sans min-h-screen pt-20">
+
+@include('partials.navbar', ['style' => $style ?? ['nav' => 'bg-maroon']])
 
   <div class="container mx-auto px-4 py-6">
     <a href="{{ route('runs.index') }}" class="text-blue-400 hover:underline">← Back to All Runs</a>

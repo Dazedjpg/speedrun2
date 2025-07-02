@@ -9,24 +9,10 @@
     .text-maroon { color: #800000; }
   </style>
 </head>
-<body class="bg-black text-white min-h-screen">
+<body class="bg-black text-white font-sans min-h-screen pt-20">
 
-<!-- Navbar -->
-<nav class="bg-maroon border-b border-gray-700 px-8 py-4 flex items-center justify-between">
-  <div class="flex items-center gap-6">
-    <span class="text-white font-bold text-xl">Speedrunner</span>
-    <a href="/" class="text-white hover:underline">Home</a>
-    <a href="/games" class="text-white hover:underline">Games</a>
-  </div>
 
-  <div class="flex items-center gap-4">
-    <input
-      type="text"
-      placeholder="Search..."
-      class="px-3 py-1 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-maroon"
-    />
-  </div>
-</nav>
+@include('partials.navbar', ['style' => $style ?? ['nav' => 'bg-maroon']])
 
 <!-- Flash Message -->
 <div class="max-w-6xl mx-auto mt-6 px-4">

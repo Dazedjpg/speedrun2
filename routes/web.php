@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\RunController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/', function () {
     return view('home');
@@ -65,3 +66,5 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
