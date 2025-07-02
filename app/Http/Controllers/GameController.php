@@ -19,6 +19,7 @@ class GameController extends Controller
         return response()->json(['message' => 'games.json berhasil diperbarui']);
     }
 
+
     public function index() {
         $games = Game::all();
         return view('games', compact('games'));
