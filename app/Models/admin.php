@@ -1,13 +1,24 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Admin extends Model
+class Admin extends Authenticatable
 {
-    protected $table = 'admin';
-    protected $primaryKey = 'admin_id';
-    public $timestamps = false;
+    use Notifiable;
 
-    protected $fillable = ['admin_name', 'password'];
+    protected $table = 'admins'; // nama tabel di database
+    protected $primaryKey = 'admin_id'; // ganti ke nama primary key kamu
+
+    public $timestamps = false; // kalau tidak pakai created_at / updated_at
+
+    protected $fillable = [
+        'admin_name', 'email', 'password',
+    ];
+
+    protected $hidden = [
+        'password',
+    ];
 }

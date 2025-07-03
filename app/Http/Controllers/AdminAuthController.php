@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -8,23 +9,29 @@ class AdminAuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('admin.login');
+        return view('admin.login'); // Buat file Blade ini nanti
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('admin_name', 'password');
+        $credentials = $request->only('email', 'password');
 
         if (Auth::guard('admin')->attempt($credentials)) {
-            return redirect()->route('admin.dashboard');
+            $request->session()->regenerate();
+            return redirect('admin/dashboard');
         }
 
-        return back()->withErrors(['admin_name' => 'Login gagal. Cek nama admin dan password.']);
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ])->withInput();
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
-        return redirect()->route('admin.login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Berhasil logout');
     }
 }

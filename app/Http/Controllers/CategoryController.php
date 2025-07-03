@@ -3,17 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function exportToJson()
+    public function store(Request $request)
     {
-        $categories = Category::all();
+        $validated = $request->validate([
+            'game_id' => 'required|integer|exists:games,game_id',
+            'category_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
 
-        Storage::disk('public')->put('json/category.json', $categories->toJson(JSON_PRETTY_PRINT));
+        // Menyimpan ke database
+        Category::create($validated);
 
-        return response()->json(['message' => 'Categories exported to category.json']);
+        // Sinkron ke JSON
+        $this->updateCategoryJson();
+
+        return back()->with('success', 'Kategori berhasil ditambahkan!');
+    }
+
+    private function updateCategoryJson()
+    {
+        $categories = Category::all()->map(function ($c) {
+            return [
+                'category_id' => $c->category_id,
+                'game_id' => $c->game_id,
+                'name' => $c->category_name, // disesuaikan dengan kolom di DB
+                'description' => $c->description,
+            ];
+        });
+
+        Storage::disk('public')->put('json/categories.json', $categories->toJson(JSON_PRETTY_PRINT));
     }
 }

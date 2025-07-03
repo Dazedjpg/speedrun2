@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -27,4 +29,31 @@ class AdminController extends Controller
             'Content-Type' => 'application/json'
         ]);
     }
+
+    public function create()
+    {
+        return view('admin.create'); // buat file resources/views/admin/create.blade.php
+    }
+
+    
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'admin_name' => 'required|string',
+            'email' => 'required|email|unique:admins,email',
+            'password' => 'required|min:6',
+        ]);
+
+        Admin::create([
+            'admin_name' => $request->admin_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('admin.login.form')->with('success', 'Admin berhasil dibuat. Silakan login.');
+    }
+
+
+
 }

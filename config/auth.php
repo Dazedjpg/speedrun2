@@ -14,9 +14,9 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'user'),
-    ],
+    'guard' => 'web',         // default guard pakai JWT
+    'passwords' => 'users',   // default password broker
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -35,16 +35,20 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'user',
-    ],
-       'api' => [
+'guards' => [
+    'api' => [
         'driver' => 'jwt',
         'provider' => 'users',
     ],
+
+     'admin' => [
+        'driver' => 'session',
+        'provider' => 'admins',
+    ],
 ],
+
+
+
 
     /*
     |--------------------------------------------------------------------------
@@ -63,17 +67,23 @@ return [
     |
     */
 
-    'providers' => [
-        'user' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
+ 'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ],
+
+    'admins' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class,
+    ],
+],
 
         // 'user' => [
         //     'driver' => 'database',
         //     'table' => 'user',
         // ],
-    ],
+    
 
     /*
     |--------------------------------------------------------------------------

@@ -16,9 +16,14 @@
 
   <!-- Tombol Tambah Game -->
   <div class="flex justify-end mb-6">
-    <a href="{{ route('games.create') }}" class="bg-maroon text-white px-4 py-2 rounded hover:bg-red-800">
-      + Tambah Game
-    </a>
+    @auth
+      @if (Auth::guard('admin')->check())
+        <a href="{{ route('games.create') }}" class="px-4 py-2 bg-maroon rounded hover:bg-red-800 text-white">
+          + Tambah Game
+        </a>
+      @endif
+    @endauth
+
   </div>
 </div>
 
@@ -39,6 +44,8 @@
         </a>
 
         <!-- Tombol Edit & Delete -->
+        @auth
+        @if (Auth::guard('admin')->check())
         <div class="flex justify-between mt-4">
           <a href="{{ route('games.edit', $game->game_id) }}"
              class="text-sm bg-yellow-500 text-black px-3 py-1 rounded hover:bg-yellow-600">
@@ -55,8 +62,12 @@
             </button>
           </form>
         </div>
+        @endif
+      @endauth
       </div>
+      
     @endforeach
+    
   </div>
 </div>
 

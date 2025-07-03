@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Game;
+use App\Models\Run;
 use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
@@ -25,9 +26,15 @@ class GameController extends Controller
         return view('games', compact('games'));
     }
 
-    public function create() {
+    public function create()
+    {
+        if (!auth('admin')->check()) {
+            abort(403, 'Unauthorized');
+        }
+
         return view('games.create');
     }
+
 
     public function store(Request $request) {
         $validated = $request->validate([
@@ -86,10 +93,26 @@ class GameController extends Controller
         return redirect()->route('games.index')->with('success', 'Game berhasil dihapus!');
     }
 
-    public function show($id) {
-        $game = Game::findOrFail($id);
-        return view('games.show', compact('game'));
+public function show($id)
+{
+    $game = Game::findOrFail($id);
+    $runs = Run::where('game_id', $id)->get();
+
+    // Ambil kategori dari JSON
+    $categoryPath = storage_path('app/public/json/categories.json');
+    $categories = [];
+
+    if (file_exists($categoryPath)) {
+        $categoryData = json_decode(file_get_contents($categoryPath), true);
+        $categories = array_column($categoryData, 'category_name'); // HANYA AMBIL NAMA
     }
+
+    // Group run berdasarkan kategori
+    $gameRuns = $runs->groupBy('category_id');
+
+    return view('games.show', compact('game', 'runs', 'categories', 'gameRuns'));
+}
+
 
 
 }

@@ -21,40 +21,45 @@
     </div>
 
     @guest
-     <a href="{{ route('login') }}" class="bg-white text-black px-4 py-1 rounded hover:bg-gray-100 transition">Sign In</a>
+  <a href="{{ route('login') }}" class="bg-white text-black px-4 py-1 rounded hover:bg-gray-100 transition">Sign In</a>
+@endguest
 
-    @endguest
+@auth
+  <!-- Profile Dropdown -->
+  <div class="relative group">
+    <button class="flex items-center focus:outline-none">
+      <span class="mr-2">{{ Auth::user()->name }}</span>
+      <svg class="w-4 h-4 transform group-hover:rotate-180 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
 
-    @auth
-      <!-- Profile Dropdown -->
-      <div class="relative group">
-        <button class="flex items-center focus:outline-none">
-          <span class="mr-2">{{ Auth::user()->name }}</span>
-          <svg class="w-4 h-4 transform group-hover:rotate-180 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        <div class="absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-md opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 z-50">
-          <a href="/profile" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
-          <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-200">Logout</button>
-          </form>
-        </div>
-      </div>
-    @endauth
+    <div class="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-md opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 z-50">
+      <a href="/profile" class="block px-4 py-2 hover:bg-gray-200">Edit Profile</a>
+
+      @php
+        $isAdmin = \App\Models\Admin::where('email', Auth::user()->email)->exists();
+      @endphp
+
+      @if($isAdmin)
+        <a href="{{ route('admin.login.form') }}" class="block px-4 py-2 hover:bg-gray-200 text-red-600 font-semibold">Admin Panel</a>
+      @endif
+
+      <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-200">Logout</button>
+      </form>
+    </div>
+  </div>
+@endauth
   </div>
 </nav>
-@if(session('success'))
-  <div id="flash-message" class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-md z-50">
-    {{ session('success') }}
-  </div>
-  <script>
-    setTimeout(() => {
-      document.getElementById('flash-message')?.remove();
-    }, 3000);
-  </script>
-@endif
+<!-- {{-- TEMPORARY DEBUGGING --}}
+@if(Auth::check())
+  <p class="text-sm">You are logged in as {{ Auth::user()->email }}</p>
+@else
+  <p class="text-sm">Not logged in</p>
+@endif -->
 <!-- Suggestion Script -->
 <script>
   const input = document.getElementById('search-input');

@@ -36,11 +36,13 @@
       <div class="mb-4">
         <label class="block mb-1 font-semibold">Category</label>
         <select name="category_id" class="w-full p-2 rounded text-black" required>
-        <option value="">Select Category</option>
-        <option value="300">Any%</option>
-         <option value="301">Glitchless</option>
-    </select>
-    </div>
+          <option value="">Select Category</option>
+          @foreach ($categories as $category)
+            <option value="{{ $category['category_id'] }}">{{ $category['category_name'] }}</option>
+          @endforeach
+        </select>
+
+      </div>
 
       <div class="mb-4">
         <label class="block mb-1 font-semibold">Status</label>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Run;
+use App\Models\Game;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,10 +45,19 @@ class RunController extends Controller
         return response()->json(['message' => 'runs.json berhasil diperbarui']);
     }
 
+    
     public function create($id)
     {
-        $game = DB::table('games')->where('game_id', $id)->first();
-        return view('runs.create', compact('game'));
+        $game = Game::findOrFail($id);
+
+        // Opsi 1: dari JSON
+        $jsonPath = storage_path('app/public/json/categories.json');
+        $categories = json_decode(file_get_contents($jsonPath), true);
+
+        // Opsi 2: jika langsung dari DB
+        // $categories = Category::all();
+
+        return view('runs.create', compact('game', 'categories'));
     }
 
     public function store(Request $request, $id)
