@@ -12,7 +12,7 @@ class AdminJsonController extends Controller
         $admins = Admin::all()->map(function ($admin) {
             return [
                 'admin_id' => $admin->admin_id,
-                'name'     => $admin->name,
+                'admin_name'     => $admin->admin_name,
                 'email'    => $admin->email,
             ];
         });
