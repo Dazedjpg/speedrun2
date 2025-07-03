@@ -58,7 +58,7 @@
   $runs = json_decode($jsonRuns, true);
 
   foreach ($runs as &$r) {
-    $r['category'] = $categoriesMap[$r['catego']] ?? 'Unknown';
+    $r['category'] = $categoriesMap[$r['category_id']] ?? 'Unknown';
   }
 
   $gameRuns = collect($runs)

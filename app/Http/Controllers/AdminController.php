@@ -51,9 +51,16 @@ class AdminController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        app(\App\Http\Controllers\AdminJsonController::class)->update();
+
         return redirect()->route('admin.login.form')->with('success', 'Admin berhasil dibuat. Silakan login.');
     }
 
+    public function update() {
+        $data = Admin::all(['admin_id', 'name', 'email']);
+        Storage::disk('public')->put('json/admins.json', $data->toJson(JSON_PRETTY_PRINT));
+        return response()->json(['ok' => true]);
+    }
 
 
 }
