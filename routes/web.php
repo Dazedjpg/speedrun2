@@ -12,6 +12,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminProfileController;
+use App\Http\Controllers\ExportJsonController;
 
 
 Route::get('/users/update-json', [UserJsonController::class, 'updateJson'])->name('users.updateJson');
@@ -203,3 +204,6 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
     Route::delete('/admin/profile/delete', [AdminProfileController::class, 'destroy'])->name('admin.profile.destroy');
 });
+
+Route::get('/export/users', [ExportJsonController::class, 'exportUsers']);
+Route::get('/export/admins', [ExportJsonController::class, 'exportAdmins']);

@@ -42,32 +42,32 @@
     <h2 class="text-2xl font-semibold mb-4">Speedrun Submissions</h2>
 
     @php
-      function convertToMilliseconds($time) {
-          preg_match('/(?:(d+)m)?s*(?:(d+)s)?s*(?:(d+)ms)?/', $time, $matches);
-          return (int)($matches[1] ?? 0) * 60000 + (int)($matches[2] ?? 0) * 1000 + (int)($matches[3] ?? 0);
-      }
+  use Illuminate\Support\Facades\Storage;
 
-      use Illuminate\Support\Facades\Storage;
+  function convertToMilliseconds($time) {
+      preg_match('/(?:(\d+)m)?\s*(?:(\d+)s)?\s*(?:(\d+)ms)?/', $time, $matches);
+      return (int)($matches[1] ?? 0) * 60000 + (int)($matches[2] ?? 0) * 1000 + (int)($matches[3] ?? 0);
+  }
 
-      $categoriesMap = [
-        300 => 'Any%',
-        301 => 'Glitchless',
-      ];
+  $categoriesMap = [
+    300 => 'Any%',
+    301 => 'Glitchless',
+  ];
 
-      $jsonRuns = Storage::disk('public')->get('json/runs.json');
-      $runs = json_decode($jsonRuns, true);
+  $jsonRuns = Storage::disk('public')->get('json/runs.json');
+  $runs = json_decode($jsonRuns, true);
 
-      foreach ($runs as &$r) {
-        $r['category'] = $categoriesMap[$r['category_id']] ?? 'Unknown';
-      }
+  foreach ($runs as &$r) {
+    $r['category'] = $categoriesMap[$r['catego']] ?? 'Unknown';
+  }
 
-      $gameRuns = collect($runs)
-        ->where('game_id', $game['game_id'])
-        ->sortBy(fn($r) => convertToMilliseconds($r['time']))
-        ->groupBy('category');
+  $gameRuns = collect($runs)
+    ->where('game_id', $game['game_id'])
+    ->sortBy(fn($r) => convertToMilliseconds($r['time']))
+    ->groupBy('category');
 
-      $categories = array_unique(array_values($categoriesMap));
-    @endphp
+  $categories = array_unique(array_values($categoriesMap));
+@endphp
 
     <!-- Tabs -->
     <div class="mb-6 flex flex-col md:flex-row justify-between items-center">
